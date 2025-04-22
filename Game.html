@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sevgi Kalkulyatori</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to top right, #ffdee9, #b5fffc);
+      overflow: hidden;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 10;
+    }
+    h2 {
+      text-align: center;
+      color: #ff4081;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #ff4081;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    #result {
+      text-align: center;
+      font-size: 24px;
+      color: #ff4081;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .heart {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center/contain;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.8;
+      z-index: 1;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150vh);
+        opacity: 0;
+      }
+    }
+    .status {
+      text-align: center;
+      font-size: 28px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💖 Sevgi Darajasi</h2>
+    <input type="text" id="name1" placeholder="Sizning ismingiz">
+    <input type="number" id="age1" placeholder="Sizning yoshingiz">
+    <input type="number" id="height1" placeholder="Sizning bo'yingiz (sm)">
+    <select id="gender1">
+      <option value="male">Erkak</option>
+      <option value="female">Ayol</option>
+    </select>
+
+    <input type="text" id="name2" placeholder="Sevgan insoningiz ismi">
+    <input type="number" id="age2" placeholder="Uning yoshi">
+    <input type="number" id="height2" placeholder="Uning bo'yi (sm)">
+    <select id="gender2">
+      <option value="female">Ayol</option>
+      <option value="male">Erkak</option>
+    </select>
+
+    <button onclick="showResult()">Natijani Ko‘rish</button>
+    <div id="result"></div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    function calculateLove() {
+      const age1 = parseInt(document.getElementById("age1").value);
+      const age2 = parseInt(document.getElementById("age2").value);
+      const height1 = parseInt(document.getElementById("height1").value);
+      const height2 = parseInt(document.getElementById("height2").value);
+      const gender1 = document.getElementById("gender1").value;
+      const gender2 = document.getElementById("gender2").value;
+
+      let score = 0;
+
+      const boy = gender1 === "male" ? height1 : height2;
+      const qiz = gender1 === "female" ? height1 : height2;
+      const bolaYosh = gender1 === "male" ? age1 : age2;
+      const qizYosh = gender1 === "female" ? age1 : age2;
+
+      const heightDiff = Math.abs(height1 - height2);
+      const ageDiff = Math.abs(age1 - age2);
+
+      if (heightDiff >= 5 && heightDiff <= 15) score += 30;
+      else if (heightDiff < 5) score += 10;
+      else if (height1 === height2) score -= 5;
+
+      if (qiz > boy) score -= 10;
+      else if (boy - qiz > 20) score -= 8;
+
+      if (ageDiff >= 2 && ageDiff <= 5) score += 30;
+      else if (ageDiff <= 1) score += 10;
+
+      if (age1 === age2) score -= 3;
+      if (qizYosh > bolaYosh) score -= 12;
+      else if (bolaYosh - qizYosh > 6) score -= 8;
+
+      if (gender1 !== gender2) score += 20;
+      else score += 5;
+
+      score = Math.max(1, Math.min(score, 100));
+      return Math.round(score);
+    }
+
+    function showResult() {
+      const result = calculateLove();
+      document.getElementById("result").textContent = `❤️ Sevgi darajasi: ${result}%`;
+
+      let status = "";
+      if (result >= 90) status = "💍 Ideal juftlik!";
+      else if (result >= 75) status = "😍 Zo‘r moslik!";
+      else if (result >= 60) status = "😊 Moslik yaxshi!";
+      else if (result >= 40) status = "🙂 Bir oz ishlash kerak!";
+      else status = "😢 Qiyin munosabat...";
+
+      document.getElementById("status").textContent = status;
+      launchHearts();
+    }
+
+    function launchHearts() {
+      for (let i = 0; i < 50; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 6000);
+      }
+    }
+  </script>
+</body>
+</html>
